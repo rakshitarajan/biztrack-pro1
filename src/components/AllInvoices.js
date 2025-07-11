@@ -4,12 +4,18 @@ import axios from "axios";
 const AllInvoices = () => {
   const [invoices, setInvoices] = useState([]);
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/invoices")
-      .then((res) => setInvoices(res.data))
-      .catch((err) => console.error(err));
-  }, []);
+ useEffect(() => {
+  const fetchInvoices = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/invoices");
+      setInvoices(response.data);
+    } catch (error) {
+      console.error("Error fetching invoices", error);
+    }
+  };
+  fetchInvoices();
+}, []);
+
 
   return (
     <div className="container mt-4">

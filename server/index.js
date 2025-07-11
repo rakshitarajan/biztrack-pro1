@@ -1,20 +1,25 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-require('dotenv').config();
+const express = require("express");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const path = require("path");
+
+dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-
 app.use(cors());
 app.use(express.json());
-const productRoutes = require('./routes/productRoutes');
-app.use('/api/products', productRoutes);
 
+// ✅ Serve static PDF files
+app.use("/invoices", express.static(path.join(__dirname, "invoices")));
+
+// Routes
+app.use("/api/invoices", require("./routes/invoiceRoutes"));
+app.use("/api/products", require("./routes/productRoutes"));
 
 mongoose.connect(process.env.MONGO_URI)
-    .then(() => {
-        console.log('MongoDB connected');
-        app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-    })
-    .catch((err) => console.error(err));
+  .then(() => {
+    console.log("MongoDB connected");
+    app.listen(5000, () => console.log("Server running on port 5000"));
+  })
+  .catch((err) => console.error(err));
